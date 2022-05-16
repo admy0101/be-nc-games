@@ -42,3 +42,44 @@ describe("/api/categories", () => {
       });
   });
 });
+
+describe("/api/reviews/:review_id", () => {
+  test("status 200, should respond with object containing: review_id, title, review_body, designer,review_img_url, votes, category, owner, created at", () => {
+    const reviewId = 1;
+    return request(app)
+      .get(`/api/reviews/${reviewId}`)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body.review, "test");
+        expect(body.review).toEqual({
+          review_id: reviewId,
+          title: "Agricola",
+          designer: "Uwe Rosenberg",
+          owner: "mallionaire",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          review_body: "Farmyard fun!",
+          category: "euro game",
+          created_at: new Date(1610964020514).toISOString(),
+          votes: 1,
+        });
+      });
+  });
+});
+
+// describe("2. GET /api/parks/:park_id", () => {
+//   test("status:200, responds with a single matching park", () => {
+//     const PARK_ID = 2;
+//     return request(app)
+//       .get(`/api/parks/${PARK_ID}`)
+//       .expect(200)
+//       .then(({ body }) => {
+//         expect(body.park).toEqual({
+//           park_id: PARK_ID,
+//           park_name: "Alton Towers",
+//           year_opened: 1980,
+//           annual_attendance: 2520000,
+//         });
+//       });
+//   });
+// });
