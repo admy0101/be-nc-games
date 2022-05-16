@@ -1,4 +1,4 @@
-const { getAllCategories } = require("./controller/games.controller");
+const { getAllCategories } = require("./controller/categories.controller");
 
 const express = require("express");
 
