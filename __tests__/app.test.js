@@ -22,9 +22,7 @@ describe("/api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         const { categories } = body;
-        console.log(categories, "<<<<<<");
         expect(categories).toBeInstanceOf(Array);
         expect(categories).toHaveLength(4);
         categories.forEach((category) => {
