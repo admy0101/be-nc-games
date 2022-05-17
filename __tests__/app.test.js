@@ -16,7 +16,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe("/api/categories", () => {
+describe("GET /api/categories", () => {
   test("status code 200, responds with an array of category objects", () => {
     return request(app)
       .get("/api/categories")
@@ -43,7 +43,7 @@ describe("/api/categories", () => {
   });
 });
 
-describe("/api/reviews/:review_id", () => {
+describe("GET /api/reviews/:review_id", () => {
   test("status 200, should respond with object containing: review_id, title, review_body, designer,review_img_url, votes, category, owner, created at", () => {
     const reviewId = 1;
     return request(app)
@@ -75,6 +75,60 @@ describe("/api/reviews/:review_id", () => {
   test("400: responds with a bad request when another data type is provided", () => {
     return request(app)
       .get("/api/reviews/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});
+
+describe("PATCH /api/reviews/:review_id", () => {
+  test("status code 200, responds with review with number of votes updated", () => {
+    const increaseVotes = { inc_votes: 15 };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(increaseVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.review).toEqual({
+          review_id: 1,
+          title: "Agricola",
+          designer: "Uwe Rosenberg",
+          owner: "mallionaire",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          review_body: "Farmyard fun!",
+          category: "euro game",
+          created_at: new Date(1610964020514).toISOString(),
+          votes: 16,
+        });
+      });
+  });
+  test("404, valid number in path but doesn't match a review", () => {
+    const increaseVotes = { inc_votes: 15 };
+    return request(app)
+      .patch("/api/reviews/9999999")
+      .send(increaseVotes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Number not found");
+      });
+  });
+  test("400: responds with an invalid input when another data type is provided", () => {
+    const increaseVotes = { inc_votes: 15 };
+    return request(app)
+      .patch("/api/reviews/notAnId")
+      .send(increaseVotes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+  test("400 : responds with a bad request when a user passes something not a number in inc_votes", () => {
+    const wrongDataVotes = { inc_votes: true };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(wrongDataVotes)
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid input");

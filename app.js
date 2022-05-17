@@ -1,13 +1,17 @@
 const { getAllCategories } = require("./controller/categories.controller");
-const { getReviewById } = require("./controller/reviews.controller.js");
+const {
+  getReviewById,
+  patchReviewByVotes,
+} = require("./controller/reviews.controller.js");
 
 const express = require("express");
 
 const app = express();
+app.use(express.json());
 
 app.get("/api/categories", getAllCategories);
 app.get("/api/reviews/:review_id", getReviewById);
-
+app.patch("/api/reviews/:review_id", patchReviewByVotes);
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
