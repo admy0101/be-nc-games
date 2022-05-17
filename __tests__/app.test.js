@@ -35,7 +35,7 @@ describe("/api/categories", () => {
   });
   test("404: responds with a not found message when given an incorrect route", () => {
     return request(app)
-      .get("/api/categories/urlnothere")
+      .get("/api/categoriess")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Route not found");
@@ -50,7 +50,6 @@ describe("/api/reviews/:review_id", () => {
       .get(`/api/reviews/${reviewId}`)
       .expect(200)
       .then(({ body }) => {
-        console.log(body.review, "test");
         expect(body.review).toEqual({
           review_id: reviewId,
           title: "Agricola",
@@ -65,21 +64,20 @@ describe("/api/reviews/:review_id", () => {
         });
       });
   });
+  test("404: responds with a message if it's a valid number but no review with that id", () => {
+    return request(app)
+      .get("/api/reviews/99999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Number not found");
+      });
+  });
+  test("400: responds with a bad request when another data type is provided", () => {
+    return request(app)
+      .get("/api/reviews/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
 });
-
-// describe("2. GET /api/parks/:park_id", () => {
-//   test("status:200, responds with a single matching park", () => {
-//     const PARK_ID = 2;
-//     return request(app)
-//       .get(`/api/parks/${PARK_ID}`)
-//       .expect(200)
-//       .then(({ body }) => {
-//         expect(body.park).toEqual({
-//           park_id: PARK_ID,
-//           park_name: "Alton Towers",
-//           year_opened: 1980,
-//           annual_attendance: 2520000,
-//         });
-//       });
-//   });
-// });
