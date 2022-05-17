@@ -1,6 +1,7 @@
 const {
   selectReviewById,
   updateReviewByVotes,
+  addCommentsToReview,
 } = require("../model/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
@@ -24,4 +25,8 @@ exports.patchReviewByVotes = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.getReviewWIthCommentCount = (req, res, next) => {
+  addCommentsToReview 
 };

@@ -32,3 +32,4 @@ exports.updateReviewByVotes = (review_id, votes) => {
       }
     });
 };
+exports.getReviewWIthCommentCount
