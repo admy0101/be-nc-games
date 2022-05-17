@@ -3,6 +3,7 @@ const {
   getReviewById,
   patchReviewByVotes,
 } = require("./controller/reviews.controller.js");
+const { getAllUsers } = require("./controller/users.controller.js");
 
 const express = require("express");
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.get("/api/categories", getAllCategories);
 app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", patchReviewByVotes);
+app.get("/api/users", getAllUsers);
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
