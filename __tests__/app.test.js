@@ -187,3 +187,39 @@ describe("GET /api/reviews/:review_id(comment count)", () => {
       });
   });
 });
+
+describe("GET /api/reviews", () => {
+  test("responds with an array of review objects", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(13);
+        reviews.forEach((review) => {
+          expect(review).toMatchObject({
+            review_id: expect.any(Number),
+            title: expect.any(String),
+            owner: expect.any(String),
+            designer: expect.any(String),
+            review_body: expect.any(String),
+            category: expect.any(String),
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          });
+        });
+        expect(reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("404: responds with a not found message when given an incorrect route", () => {
+    return request(app)
+      .get("/api/notAValidPath")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
+      });
+  });
+});
