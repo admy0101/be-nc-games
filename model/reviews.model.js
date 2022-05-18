@@ -4,7 +4,7 @@ const reviews = require("../db/data/test-data/reviews.js");
 exports.selectReviewById = (review_id) => {
   return db
     .query(
-      `SELECT reviews.*, COUNT(comments.review_id)::INT AS comment_count FROM reviews
+      `SELECT reviews.*, COUNT(comments.review_id)::INTgit  AS comment_count FROM reviews
       LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = $1
       GROUP BY reviews.review_id  `,
       [review_id]
