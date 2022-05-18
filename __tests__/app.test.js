@@ -182,7 +182,7 @@ describe("GET /api/reviews/:review_id(comment count)", () => {
           category: "dexterity",
           created_at: new Date(1610964101251).toISOString(),
           votes: 5,
-          comment_count: (3).toString(),
+          comment_count: 3,
         });
       });
   });
