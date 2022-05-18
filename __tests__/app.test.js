@@ -50,7 +50,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get(`/api/reviews/${reviewId}`)
       .expect(200)
       .then(({ body }) => {
-        expect(body.review).toEqual({
+        expect(body.review).toMatchObject({
           review_id: reviewId,
           title: "Agricola",
           designer: "Uwe Rosenberg",
@@ -182,7 +182,7 @@ describe("GET /api/reviews/:review_id(comment count)", () => {
           category: "dexterity",
           created_at: new Date(1610964101251).toISOString(),
           votes: 5,
-          comment_count: 3,
+          comment_count: (3).toString(),
         });
       });
   });
