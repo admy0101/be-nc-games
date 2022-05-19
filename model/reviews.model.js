@@ -1,5 +1,6 @@
 const db = require("../db/connection.js");
-const reviews = require("../db/data/test-data/reviews.js");
+const comments = require("../db/data/test-data/comments.js");
+//const reviews = require("../db/data/test-data/reviews.js");
 
 exports.selectReviewById = (review_id) => {
   return db
@@ -47,5 +48,13 @@ exports.selectAllReviews = () => {
     )
     .then((result) => {
       return result.rows;
+    });
+};
+
+exports.selectCommentsById = (review_id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE review_id = $1;`, [review_id])
+    .then((comments) => {
+      return comments.rows;
     });
 };

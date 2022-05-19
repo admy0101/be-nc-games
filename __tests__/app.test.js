@@ -189,7 +189,7 @@ describe("GET /api/reviews/:review_id(comment count)", () => {
 });
 
 describe("GET /api/reviews", () => {
-  test("responds with an array of review objects", () => {
+  test("status code : 200 and responds with an array of review objects", () => {
     return request(app)
       .get("/api/reviews")
       .expect(200)
@@ -220,6 +220,55 @@ describe("GET /api/reviews", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Route not found");
+      });
+  });
+});
+
+describe("GET/api/reviews/:review_id/comments", () => {
+  test("status code 200 : responds with an array of comments for the given review_id", () => {
+    const review_id = 3;
+    return request(app)
+      .get(`/api/reviews/${review_id}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toBeInstanceOf(Array);
+        expect(comments).toHaveLength(3);
+        comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            votes: expect.any(Number),
+            author: expect.any(String),
+            review_id: 3,
+            created_at: expect.any(String),
+          });
+        });
+      });
+  });
+
+  test("404: responds with a message if it's a valid number but no review with that id", () => {
+    return request(app)
+      .get("/api/reviews/99999999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Number not found");
+      });
+  });
+  test("400: responds with a bad request when another data type is provided", () => {
+    return request(app)
+      .get("/api/reviews/notAnId/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+  test("200: found the review but there are no comments to show so returns an empty array", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
       });
   });
 });
