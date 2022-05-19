@@ -39,7 +39,7 @@ exports.getCommentsById = (req, res, next) => {
   selectReviewById(review_id)
     .then((review) => {
       if (!review) {
-        return Promise.reject;
+        return Promise.reject({ status: 404, msg: "review doesn't exist" });
       } else {
         return selectCommentsById(review_id);
       }
