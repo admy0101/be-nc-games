@@ -4,7 +4,7 @@ const {
   patchReviewByVotes,
   getAllReviews,
   getCommentsById,
-  checkReviewExists,
+  postComment,
 } = require("./controller/reviews.controller.js");
 const { getAllUsers } = require("./controller/users.controller.js");
 
@@ -19,6 +19,7 @@ app.patch("/api/reviews/:review_id", patchReviewByVotes);
 app.get("/api/users", getAllUsers);
 app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsById);
+app.post("/api/reviews/:review_id/comments", postComment);
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {

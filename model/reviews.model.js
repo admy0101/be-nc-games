@@ -58,3 +58,18 @@ exports.selectCommentsById = (review_id) => {
       return comments.rows;
     });
 };
+
+exports.insertComment = (review_id, reqBody) => {
+  const commentBody = reqBody.body;
+  const commentAuthor = reqBody.username;
+  console.log(commentAuthor, "<<<<<in the model");
+
+  return db
+    .query(
+      `INSERT INTO comments(body, author, review_id) VALUES($1, $2, $3) RETURNING *`,
+      [commentBody, commentAuthor, review_id]
+    )
+    .then((comment) => {
+      return comment.rows[0];
+    });
+};

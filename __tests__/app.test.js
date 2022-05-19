@@ -272,3 +272,28 @@ describe("GET/api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("request body accepts an object with username and body and responds with the posted comment", () => {
+    const review_id = 1;
+    const newPost = {
+      username: "mallionaire",
+      body: "Slightly more fun than watching paint dry",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newPost)
+      .expect(201)
+      .then(({ body }) => {
+        //console.log(body, "<<<<<<TEST");
+        expect(body.comment).toEqual({
+          comment_id: 7,
+          body: "Slightly more fun than watching paint dry",
+          author: "mallionaire",
+          review_id: 1,
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+});

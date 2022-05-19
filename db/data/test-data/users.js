@@ -1,5 +1,5 @@
 module.exports = [
-  {
+  { 
     username: 'mallionaire',
     name: 'haz',
     avatar_url:
