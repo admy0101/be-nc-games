@@ -305,7 +305,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .send(newPost)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid input");
+        expect(body.msg).toBe("Invalid input");
       });
   });
 
@@ -334,6 +334,19 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("user not found");
+      });
+  });
+  test("400: responds with a bad request when another data type is provided", () => {
+    const newPost = {
+      username: "mallionaire",
+      body: "Slightly more fun than watching paint dry",
+    };
+    return request(app)
+      .post(`/api/reviews/not-an-id/comments`)
+      .send(newPost)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
       });
   });
 });

@@ -71,8 +71,3 @@ exports.insertComment = (review_id, reqBody) => {
       return comment.rows[0];
     });
 };
-
-// if (!comment.rows.length) {
-//   return Promise.reject({ status: 404, msg: "Number not found" });
-// } else
-//   console.log(comment.rows[0]);
