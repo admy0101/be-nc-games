@@ -39,16 +39,31 @@ exports.updateReviewByVotes = (review_id, votes) => {
     });
 };
 
-exports.selectAllReviews = () => {
-  return db
-    .query(
-      `SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.designer, reviews.review_body, review_img_url, reviews.created_at ::DATE, reviews.votes, COUNT(comments.review_id)::INT AS comment_count FROM reviews
+exports.selectAllReviews = (sort_by = "created_at", order = "desc") => {
+  const queryString = `SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.designer, reviews.review_body, review_img_url, reviews.created_at ::DATE, reviews.votes, COUNT(comments.review_id)::INT AS comment_count FROM reviews
       LEFT JOIN comments ON comments.review_id = reviews.review_id 
-      GROUP BY reviews.review_id ORDER BY reviews.created_at DESC ;`
-    )
-    .then((result) => {
+      GROUP BY reviews.review_id ORDER BY ${sort_by} ${order};`;
+
+  if (
+    ![
+      "owner",
+      "title",
+      "designer",
+      "review_img_url",
+      "review_body",
+      "category",
+      "created_at",
+      "votes",
+    ].includes(sort_by)
+  ) {
+    return Promise.reject({ status: 400, msg: "Invalid sort query" });
+  } else if (!["asc", "desc"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order query" });
+  } else {
+    return db.query(queryString).then((result) => {
       return result.rows;
     });
+  }
 };
 
 exports.selectCommentsById = (review_id) => {

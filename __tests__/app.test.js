@@ -350,3 +350,59 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("GET /api/reviews (queries)", () => {
+  test("200, sorts the reviews by default to date", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("200, sort the reviews by any valid column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=designer")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("designer", { descending: true });
+      });
+  });
+  test("400, when user enters non valid sort query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=not-a-valid-sort-query")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort query");
+      });
+  });
+  test("200, sort the reviews by ascending order", () => {
+    return request(app)
+      .get("/api/reviews?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  test("400, when user enters non valid order_by query", () => {
+    return request(app)
+      .get("/api/reviews?order=not-a-valid-sort-query")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order query");
+      });
+  });
+  test("200, filters results by category", () => {
+    return request(app)
+      .get("/api/reviews?category=social-deduction")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(11);
+      });
+  });
+});

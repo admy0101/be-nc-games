@@ -30,9 +30,17 @@ exports.patchReviewByVotes = (req, res, next) => {
 };
 
 exports.getAllReviews = (req, res, next) => {
-  selectAllReviews().then((reviews) => {
-    res.status(200).send({ reviews });
-  });
+  const { sort_by } = req.query;
+
+  const { order } = req.query;
+  console.log(order);
+  selectAllReviews(sort_by, order)
+    .then((reviews) => {
+      res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getCommentsById = (req, res, next) => {
