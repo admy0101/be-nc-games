@@ -62,8 +62,6 @@ exports.selectCommentsById = (review_id) => {
 exports.insertComment = (review_id, reqBody) => {
   const commentBody = reqBody.body;
   const commentAuthor = reqBody.username;
-  console.log(commentAuthor, "<<<<<in the model");
-
   return db
     .query(
       `INSERT INTO comments(body, author, review_id) VALUES($1, $2, $3) RETURNING *`,
@@ -73,3 +71,8 @@ exports.insertComment = (review_id, reqBody) => {
       return comment.rows[0];
     });
 };
+
+// if (!comment.rows.length) {
+//   return Promise.reject({ status: 404, msg: "Number not found" });
+// } else
+//   console.log(comment.rows[0]);
