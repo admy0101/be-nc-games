@@ -397,7 +397,7 @@ describe("GET /api/reviews (queries)", () => {
   });
   test("200, filters results by category", () => {
     return request(app)
-      .get("/api/reviews?category=social-deduction")
+      .get("/api/reviews?category=social deduction")
       .expect(200)
       .then(({ body }) => {
         const { reviews } = body;
@@ -405,4 +405,18 @@ describe("GET /api/reviews (queries)", () => {
         expect(reviews).toHaveLength(11);
       });
   });
+  test("404, user tries to enter a non-existent category", () => {
+    return request(app)
+      .get("/api/reviews?category=thinking")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Category doesn't exist");
+      });
+  });
 });
+
+// describe("DELETE /api/comments/:comment_id", () => {
+//   test("deletes the given comment by comment_id", () => {
+//     return request(app).get("/api/comments/1").expect(204);
+//   });
+// });
