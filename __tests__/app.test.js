@@ -272,3 +272,81 @@ describe("GET/api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("request body accepts an object with username and body and responds with the posted comment", () => {
+    const review_id = 1;
+    const newPost = {
+      username: "mallionaire",
+      body: "Slightly more fun than watching paint dry",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newPost)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          comment_id: 7,
+          body: "Slightly more fun than watching paint dry",
+          author: "mallionaire",
+          review_id: 1,
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("400, responds with a bad request when body does not contain both mandatory keys", () => {
+    const review_id = 1;
+    const newPost = {
+      body: "Slightly more fun than watching paint dry",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newPost)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+
+  test("404, valid number in path but review_id doesn't exist", () => {
+    const newPost = {
+      username: "mallionaire",
+      body: "Slightly more fun than watching paint dry",
+    };
+    return request(app)
+      .post(`/api/reviews/999999/comments`)
+      .send(newPost)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Number not found");
+      });
+  });
+  test("404, a user not in the database tries to post", () => {
+    const review_id = 1;
+    const newPost = {
+      username: "jasperpickett",
+      body: "Absolutely loved it!",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newPost)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("user not found");
+      });
+  });
+  test("400: responds with a bad request when another data type is provided", () => {
+    const newPost = {
+      username: "mallionaire",
+      body: "Slightly more fun than watching paint dry",
+    };
+    return request(app)
+      .post(`/api/reviews/not-an-id/comments`)
+      .send(newPost)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});

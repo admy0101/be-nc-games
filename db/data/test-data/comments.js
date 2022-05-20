@@ -6,7 +6,7 @@ module.exports = [
     review_id: 2,
     created_at: new Date(1511354613389),
   },
-  {
+  { 
     body: 'My dog loved this game too!',
     votes: 13,
     author: 'mallionaire',
