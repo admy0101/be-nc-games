@@ -415,8 +415,24 @@ describe("GET /api/reviews (queries)", () => {
   });
 });
 
-// describe("DELETE /api/comments/:comment_id", () => {
-//   test("deletes the given comment by comment_id", () => {
-//     return request(app).get("/api/comments/1").expect(204);
-//   });
-// });
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204, deletes the given comment by comment_id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("404: comment_id in path doesn't exist", () => {
+    return request(app)
+      .delete("/api/comments/99999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Number not found");
+      });
+  });
+  test("400: responds with a bad request when another data type is provided", () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});

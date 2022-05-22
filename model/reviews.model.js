@@ -1,5 +1,5 @@
 const db = require("../db/connection.js");
-const comments = require("../db/data/test-data/comments.js");
+
 
 exports.selectReviewById = (review_id) => {
   return db

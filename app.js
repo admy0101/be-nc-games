@@ -7,7 +7,7 @@ const {
   postComment,
 } = require("./controller/reviews.controller.js");
 const { getAllUsers } = require("./controller/users.controller.js");
-//const { deleteComment } = require("./controller/comments.controller.js");
+const { deleteComment } = require("./controller/comments.controller.js");
 
 const express = require("express");
 
@@ -21,7 +21,7 @@ app.get("/api/users", getAllUsers);
 app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsById);
 app.post("/api/reviews/:review_id/comments", postComment);
-//app.delete("/api/comments/:comment_id", deleteComment);
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02" || err.code === "23502") {
