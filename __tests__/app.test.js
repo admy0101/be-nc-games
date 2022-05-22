@@ -397,7 +397,7 @@ describe("GET /api/reviews (queries)", () => {
   });
   test("200, filters results by category", () => {
     return request(app)
-      .get("/api/reviews?category=social deduction")
+      .get("/api/reviews?category=social%20deduction")
       .expect(200)
       .then(({ body }) => {
         const { reviews } = body;
