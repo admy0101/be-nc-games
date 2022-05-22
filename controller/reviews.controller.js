@@ -6,6 +6,7 @@ const {
   insertComment,
 } = require("../model/reviews.model");
 
+
 exports.getReviewById = (req, res, next) => {
   const { review_id } = req.params;
   selectReviewById(review_id)
@@ -30,9 +31,21 @@ exports.patchReviewByVotes = (req, res, next) => {
 };
 
 exports.getAllReviews = (req, res, next) => {
-  selectAllReviews().then((reviews) => {
-    res.status(200).send({ reviews });
-  });
+  const { sort_by } = req.query;
+  const { order } = req.query;
+
+  const { category } = req.query;
+
+  selectAllReviews(sort_by, order, category)
+    .then((reviews) => {
+      if (reviews.length === 0) {
+        return Promise.reject({ status: 404, msg: "Category doesn't exist" });
+      }
+      res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getCommentsById = (req, res, next) => {
@@ -67,3 +80,5 @@ exports.postComment = (req, res, next) => {
       next(err);
     });
 };
+
+
