@@ -1,4 +1,4 @@
-const res = require("express/lib/response");
+
 const fs = require("fs");
 
 exports.getAllEndpoints = (req, res, next) => {
